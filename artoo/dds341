@@ -1,0 +1,67 @@
+＃Dyadra's Artoo Codes
+
+######Here is my code Guys
+
+//Code 1: Website (https://www.usa.gov/)
+
+artoo.scrape('body > *', {
+    text: function() {
+        var searchFor = 'Government';
+        var replaceWith = '政府';
+        var html = $(this).html();
+        if (html.search(searchFor) > -1) {
+            var newHtml = html.replace(new RegExp(searchFor, 'g'), replaceWith);
+            $(this).html(newHtml);
+        }
+    }
+});
+
+//Code 2: Go to UrbanDictionary.com and select a word.
+
+var urbanDictionary = [];
+var define;
+artoo.scrape('.def-panel', {
+    text: function() {
+        define = $(this).find('.meaning').text();
+       
+        if (define != '') {
+            var post = {
+                'define': define,
+                
+            };
+            urbanDictionary.push(post);
+        }
+    }
+}, function() {
+    artoo.savePrettyJson(urbanDictionary);
+});
+
+//Code 3: Go to Craiglist.com and go to any catogory of post
+
+var craigslistPost = [];
+var local;
+artoo.scrape('.l2', {
+    text: function() {
+       local = $(this).find('.pnr').text();
+       
+        if (local != '') {
+            var post = {
+                'local': local,
+                
+            };
+            craigslistPost.push(post);
+        }
+    }
+}, function() {
+    artoo.savePrettyJson(craigslistPost);
+});
+
+
+//Code 4: Website (Cnn.com) or any website with lots of pictures.
+
+artoo.scrape('img', function($) {
+    var imgSrc = 'https://mlpforums.com/uploads/post_images/img-3692518-1-wpid-Creepy-Wallpaper-424.jpg';
+    $(this).attr('src', imgSrc);
+});
+
+
