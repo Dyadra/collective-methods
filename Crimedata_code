@@ -1,0 +1,24 @@
+import requests
+from lxml import html
+
+
+response = requests.get("http://maps.met.police.uk/php/dataview.php?area=MPS&ct=8")
+tree = html.fromstring(response.content)
+table = tree.xpath(".//table[@id='areas-table']")[0]
+rows = table.xpath("//tr")
+data = list()
+for row in rows:
+    data.append([c.text_content() for c in row.getchildren()])
+
+crime_information_dictionary = data
+
+print crime_information_dictionary
+
+formatted_lines = []
+
+for crime_info in crime_information_dictionary:
+    formatted_lines.append(str(crime_info)+"\n")
+
+
+with open("crime_stats.txt", "w") as crime_stats_file:
+    crime_stats_file.writelines(formatted_lines)
